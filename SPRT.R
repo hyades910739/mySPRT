@@ -1,6 +1,7 @@
 ##mySPRT
-## version 0.87, 2017.4.28. 04:15 A.M.
+## version 1.87, 2017.5.3. 01:05 A.M.
 ## only Bernoulli test now
+## add : argument: previous. Use previous to sent previous llr to the new test.
 ## author: Hyades Lai
 
 library(magrittr)

@@ -23,6 +23,42 @@ sprt4 = mySPRT(newdata,0.35,0.55,0.05,0.1,previous = sprt3)
 plot(sprt4)
 ###############################
 
+##########testSPRT############
+
+testSPRT = function(repeatT,n,actual,h0,h1,alpha,beta){
+  test = replicate(repeatT,replicate(n,rbinom(1,1,actual)))
+  
+  apply(test,2,FUN=function(x){
+    mySPRT(data=x,H0=h0,H1=h1,alpha=alpha,beta=beta)$decision
+  }) %>% table() %>% '/'(repeatT)
+}
+
+testSPRT2 = function(repeatT,n,actual,h0,h1,alpha,beta){
+  test = replicate(repeatT,replicate(n,rbinom(1,1,actual)))
+  header = paste("sample size \nalpha=",alpha,",beta=",beta,",repat=",repeatT,sep="")
+  
+  apply(test,2,FUN=function(x){
+    mySPRT(data=x,H0=h0,H1=h1,alpha=alpha,beta=beta)$n
+  })  %T>% boxplot(.,main=header) %>% summary()
+}
+
+testSPRT2(1000,1000,0.5,0.5,0.8,0.05,0.1)
+testSPRT2(1000,1000,0.5,0.5,0.8,0.1,0.1)
+testSPRT2(1000,1000,0.5,0.5,0.6,0.05,0.1)
+
+
+set.seed(689)
+##test for type I error /w repeat 100, 1000 times:
+testSPRT(100,1000,0.5,0.5,0.8,0.05,0.1)
+testSPRT(1000,1000,0.5,0.5,0.8,0.05,0.1)
+
+##test for type II error /w repeat 100, 1000 times:
+testSPRT(100,1000,0.5,0.8,0.5,0.05,0.1)
+testSPRT(1000,1000,0.5,0.8,0.5,0.05,0.1)
+
+
+############for test end ##############
+
 #main function:
 mySPRT = function(data,H0,H1,alpha,beta,distribution="bernoulli",previous=NULL){
   boundary = boundary.cal(alpha,beta,log=T);  
